@@ -25,4 +25,4 @@ async def status_task():
 
 
 
-bot.run("ODA0MzgyMjIxNzI5Mzk4ODM1.YBLhUg.BCUiSvrnmE3owomUNvpVuPdrMuE")
+bot.run(DISCORD_TOKEN)
