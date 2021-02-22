@@ -1,6 +1,13 @@
 import discord
 from discord.ext import commands
 import asyncio
+from dotenv import load_dotenv
+import os
+
+
+load_dotenv()
+TOKEN = os.getenv('DISCORD_TOKEN')
+
 
 bot = commands.Bot(command_prefix='<', intents=discord.Intents.all())
 bot.remove_command('help')
@@ -25,4 +32,4 @@ async def status_task():
 
 
 
-bot.run(DISCORD_TOKEN)
+bot.run(TOKEN)
