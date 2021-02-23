@@ -59,8 +59,9 @@ async def create_wallet(ctx: commands.Context):
     user_id = ctx.author.id
 
     category = discord.utils.get(ctx.guild.categories, name="tickets")
-    ticketNumber = len(db.wallets.find({}))
+    ticketNumber = db.wallets.count_documents({})
     channel = ctx.channel.id if ctx.channel.name.startswith("ticket-") else (await ctx.guild.create_text_channel(f'Ticket-{ticketNumber}', category=category)).id
+    print("Channel:", channel, "User_ID:", user_id)
 
 
 
