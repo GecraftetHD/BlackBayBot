@@ -43,4 +43,5 @@ async def get_money(ctx):
 
 
 bot.load_extension('cogs.help')
+bot.load_extension('cogs.bank')
 bot.run(TOKEN)
