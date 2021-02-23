@@ -15,6 +15,7 @@ class bank(commands.Cog):
         embed.add_field(name="Kontoverwaltung", value="`withdraw` `send` `history`")
 
 
+
         await ctx.send(embed=embed)
 
 
