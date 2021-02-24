@@ -4,10 +4,10 @@ databases = pymongo.MongoClient("mongodb://localhost:27017/")
 db = databases["BlackBay"]
 
 clients = db["clients"]
-#{"user_id": INT, user_name": STR}
+#{"user_id": INT, "user_name": STR}
 
 wallets = db["wallets"]
-#{"amount": FLOAT, "users": LIST[object_id], channel_id": FLOAT
+#{"amount": FLOAT, "users": LIST[object_id], "channel_id": FLOAT"}
 
 print("Datenbank initialisiert.")
 

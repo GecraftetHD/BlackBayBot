@@ -6,8 +6,6 @@ import os
 import cryptic_sdk as cryptic
 import bankdata as db
 
-
-
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 cryptic_user = os.getenv('env_user')
@@ -16,8 +14,8 @@ cryptic_wallet = os.getenv('env_wallet_uuid')
 cryptic_key = os.getenv('env_wallet_key')
 print("--------------------------------------")
 print("logged in at Cryptic with Credentials:")
-#print("Username:", cryptic_user)
-#print("Password:", cryptic_password)
+# print("Username:", cryptic_user)
+# print("Password:", cryptic_password)
 print("--------------------------------------")
 
 bot = commands.Bot(command_prefix='<', intents=discord.Intents.all())
@@ -48,10 +46,16 @@ async def status_task():
 
 @bot.command()
 async def get_money(ctx):
+    if ctx.author.id == 333934370857418752:
+        wallet: cryptic.Wallet = client.getUser().getWallet(cryptic_wallet, cryptic_key)
+        embed = discord.Embed(title="BlackBay | Crytic Bank",
+                              description=f"Aktueller Kontostand: {wallet.amount}")
+        await ctx.send(embed=embed)
+    else:
 
-    wallet: cryptic.Wallet = client.getUser().getWallet(cryptic_wallet, cryptic_key)
-    await ctx.send(wallet.amount)
-
+        embed = discord.Embed(title="BlackBay | Cryptic Bank",
+                              description="Dazu hast du keine Rechte!")
+        await ctx.send(embed=embed)
 
 
 @bot.command()
@@ -60,10 +64,10 @@ async def create_wallet(ctx: commands.Context):
 
     category = discord.utils.get(ctx.guild.categories, name="tickets")
     ticketNumber = db.wallets.count_documents({})
-    channel = ctx.channel.id if ctx.channel.name.startswith("ticket-") else (await ctx.guild.create_text_channel(f'Ticket-{ticketNumber}', category=category)).id
+    channel = ctx.channel.id if ctx.channel.name.startswith("ticket-") else (
+        await ctx.guild.create_text_channel(f'Ticket-{ticketNumber}', category=category)).id
     print("Channel:", channel, "User_ID:", user_id)
-
-
+    await channel.id.send("Herzlichen Glückwunsch zu deinem neuen Konto")
 
 
 bot.load_extension('cogs.help')
