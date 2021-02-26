@@ -20,8 +20,19 @@ def is_bankchannel(channel_id, message_id):
     utils = db["utils"]
     return utils.count_documents({"channel_id": channel_id, "message_id": message_id}) > 0
 
+def insert_employee(id):
+    utils = db["utils"]
+    utils.insert_one({"employee_id": id})
+    pass
+
+def get_employee():
+    utils =db["utils"]
+    id = utils.find({"employee_id"})
+    print(id)
+    return id
 
 
+get_employee()
 
 
 

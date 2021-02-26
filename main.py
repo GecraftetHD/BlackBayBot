@@ -48,15 +48,16 @@ async def on_raw_reaction_add(payload):
     message = channel.get_partial_message(message_id)
     await message.remove_reaction(emoji, member)
     print("Reaction removed!")
+    #id = db.get_employee()
 
+    category = discord.utils.get(channel.guild.categories, name="tickets")
     overwrites = {
         channel.guild.default_role: discord.PermissionOverwrite(read_messages=False),
-        channel.guild.me: discord.PermissionOverwrite(read_messages=True)
-        # channel.guild
+        channel.guild.me: discord.PermissionOverwrite(read_messages=True),
+        #channel.guild.id: discord.PermissionOverwrite(read_message=True)
     }
 
-    channel2 = await channel.guild.create_text_channel('secret', overwrites=overwrites)
-
+    channel2 = await channel.guild.create_text_channel('secret', overwrites=overwrites, category=category)
 
 
 async def status_task():
@@ -124,7 +125,9 @@ async def addrole(ctx, args):
         y = int(args)
         embed = discord.Embed(title="BlackBay | Cryptic Bank",
                               description=f"Rolle mit der ID {args} in die Datenbank hinzugefügt.")
+        db.insert_employee(args)
         await ctx.send(embed=embed)
+
     except:
         embed = discord.Embed(title="BlackBay | Cryptic Bank",
                               description="Bitte geben sie eine gültige Mitarbeiterrollen-ID ein!")
