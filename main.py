@@ -148,6 +148,7 @@ async def addrole_error(error, ctx):
         await ctx.send(embed=embed)
 
 @bot.command()
+@commands.has_permissions(administrator=True)
 async def close_wallet(ctx):
     await ctx.channel.delete()
 
