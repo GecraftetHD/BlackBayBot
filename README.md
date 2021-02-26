@@ -14,7 +14,7 @@ Needed packages:
 |variable|value  |
 |--|--|
 |DISCORD_TOKEN | your discord bots token
-| env_user | put your crypticaccoutn username here |
+| env_user | cryptic username |
 | env_password | cryptic password
 | env_wallet_key | enter your wallet key
 | env_wallet_uuid | enter your wallet uuid
