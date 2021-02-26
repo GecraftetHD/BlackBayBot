@@ -66,10 +66,6 @@ async def on_raw_reaction_add(payload):
     await channel.send(embed=embed)
 
 
-
-
-
-
 async def status_task():
     while True:
         await bot.change_presence(activity=discord.Game('BlackBay Bank Bot ;D'), status=discord.Status.online)
@@ -150,6 +146,18 @@ async def addrole_error(error, ctx):
         embed = discord.Embed(title="BlackBay | Cryptic Bank",
                               description="Dazu hast du keine Rechte. Anzeige ist raus!")
         await ctx.send(embed=embed)
+
+@bot.command()
+async def close_wallet(ctx):
+    await ctx.channel.delete()
+
+
+@bot.command()
+async def pay_out(ctx):
+    embed = discord.Embed(title="BlackBay | Cryptic Bank", description="Ihr Geld wurden an 'b48bd270-e2a3-43a1-9ae9-a3dbb14257de' ausgezahlt")
+    await ctx.send(embed=embed)
+
+
 
 
 bot.load_extension('cogs.help')
