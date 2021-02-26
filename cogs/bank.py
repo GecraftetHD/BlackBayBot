@@ -14,11 +14,7 @@ class bank(commands.Cog):
         embed.add_field(name="Adminstuff", value="`get_money` `add_transaction` `Platzhalter`")
         embed.add_field(name="Kontoverwaltung", value="`withdraw` `send` `history`")
 
-
-
         await ctx.send(embed=embed)
-
-
 
 
 def setup(bot):
