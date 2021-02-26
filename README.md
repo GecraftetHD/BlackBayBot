@@ -11,7 +11,7 @@ Needed packages:
  
  You need some Environment Variables. For this you should create a file called .env in your main folder. 
  You also gonna need a cryptic account. You can create one here:
-https://cryptic-game.net/register
+https://play.cryptic-game.net/signup
 |variable|value  |
 |--|--|
 |DISCORD_TOKEN | your discord bots token
