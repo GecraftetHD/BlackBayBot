@@ -6,6 +6,7 @@ import os
 import cryptic_sdk as cryptic
 import bankdata as db
 from discord.ext.commands import CheckFailure
+from discord.utils import get
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -13,6 +14,7 @@ cryptic_user = os.getenv('env_user')
 cryptic_password = os.getenv('env_password')
 cryptic_wallet = os.getenv('env_wallet_uuid')
 cryptic_key = os.getenv('env_wallet_key')
+cryptic_mod = os.getenv('env_mod')
 print("--------------------------------------")
 print("logged in at Cryptic with Credentials:")
 # print("Username:", cryptic_user)
@@ -42,22 +44,30 @@ async def on_raw_reaction_add(payload):
 
     if user == bot.user or not db.is_bankchannel(channel_id, message_id):
         return
-    print("True")
-    print(f"{payload.member}")
+
     channel = bot.get_channel(channel_id)
     message = channel.get_partial_message(message_id)
     await message.remove_reaction(emoji, member)
-    print("Reaction removed!")
-    #id = db.get_employee()
-
     category = discord.utils.get(channel.guild.categories, name="tickets")
     overwrites = {
         channel.guild.default_role: discord.PermissionOverwrite(read_messages=False),
-        channel.guild.me: discord.PermissionOverwrite(read_messages=True),
-        #channel.guild.id: discord.PermissionOverwrite(read_message=True)
+        channel.guild.me: discord.PermissionOverwrite(read_messages=True, send_messages=True, add_reactions=True, embed_links=True, attach_files=True),
+        get(channel.guild.roles, id=int(cryptic_mod)): discord.PermissionOverwrite(read_messages=True, send_messages=True, add_reactions=True, embed_links=True, attach_files=True),
+        member: discord.PermissionOverwrite(read_messages=True, send_messages=True, add_reactions=True, embed_links=True, attach_files=True)
+
+
     }
 
-    channel2 = await channel.guild.create_text_channel('secret', overwrites=overwrites, category=category)
+    ticketNumber = db.wallets.count_documents({})
+
+    channel = await category.create_text_channel(name=f'ticket-{ticketNumber}', overwrites=overwrites)
+    db.insert_wallet(channel.id, member.id, member, channel.name)
+    embed = discord.Embed(title="BlackBay | Cryptic Bank", description=f"Herzlichen Glückwunsch. Sie haben nun ihr Konto erstellt. {member.mention}")
+    await channel.send(embed=embed)
+
+
+
+
 
 
 async def status_task():
