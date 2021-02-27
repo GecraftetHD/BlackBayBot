@@ -1,5 +1,6 @@
 import pymongo
 from bson.objectid import ObjectId
+import config
 
 databases = pymongo.MongoClient("mongodb://localhost:27017/")
 
@@ -17,20 +18,13 @@ print("Datenbank initialisiert.")
 
 
 def insert_bank_channel(channel_id, message_id):
-    utils.insert_one({"channel_id": channel_id, "message_id": message_id})
+    config.config['bank_message'] = {"channel_id": channel_id, "message_id": message_id}
+    config.save_config()
 
 
 def is_bankchannel(channel_id, message_id):
-    return utils.find_one({"channel_id": channel_id, "message_id": message_id}) is not None
-
-
-def insert_employee(role_id):
-    utils.insert_one({"employee_id": role_id})
-
-
-def get_employee():
-    role_id = utils.find_one({})
-    return role_id
+    return config.config['bank_message']['channel_id'] == channel_id and config.config['bank_message'][
+        'message_id'] == message_id
 
 
 def is_client(user_id):
@@ -58,9 +52,8 @@ def get_client(user_id):
 
 
 def close_status(channel_id):
-    wallet = wallets.find_one({"channel_id": channel_id})
-    print(wallet)
-    wallet.edit_one({"status": "closed"})
-    wallet = wallets.find_one({"channel_id": channel_id})
-    wallets.find_one_and_update()
-    print(wallet)
+    wallet = wallets.update_one({"channel_id": channel_id}, {"$set": {"status": "closed"}})
+
+
+def get_member_id_by_wallet_channel(wallet_channel_id):
+    return clients.find_one({"_id": wallets.find_one({"channel_id": wallet_channel_id})['users'][0]})['user_id']

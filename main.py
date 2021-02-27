@@ -7,6 +7,8 @@ import cryptic_sdk as cryptic
 import bankdata as db
 from discord.ext.commands import CheckFailure
 from discord.utils import get
+from discord import Member, TextChannel
+import config
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -40,10 +42,12 @@ async def on_raw_reaction_add(payload):
     channel_id = payload.channel_id
     message_id = payload.message_id
     user = payload.user_id
-    member = payload.member
+    member: Member = payload.member
     emoji = payload.emoji
 
-    if user == bot.user or not db.is_bankchannel(channel_id, message_id):
+    if bot.user.id == int(user):
+        return
+    if not db.is_bankchannel(channel_id, message_id):
         return
 
     channel = bot.get_channel(channel_id)
@@ -52,16 +56,22 @@ async def on_raw_reaction_add(payload):
     category = discord.utils.get(channel.guild.categories, name="tickets")
     overwrites = {
         channel.guild.default_role: discord.PermissionOverwrite(read_messages=False),
-        channel.guild.me: discord.PermissionOverwrite(read_messages=True, send_messages=True, add_reactions=True, embed_links=True, attach_files=True),
-        get(channel.guild.roles, id=int(cryptic_mod)): discord.PermissionOverwrite(read_messages=True, send_messages=True, add_reactions=True, embed_links=True, attach_files=True),
-        member: discord.PermissionOverwrite(read_messages=True, send_messages=True, add_reactions=True, embed_links=True, attach_files=True)
+        channel.guild.me: discord.PermissionOverwrite(read_messages=True, send_messages=True, add_reactions=True,
+                                                      embed_links=True, attach_files=True),
+        get(channel.guild.roles, id=int(cryptic_mod)): discord.PermissionOverwrite(read_messages=True,
+                                                                                   send_messages=True,
+                                                                                   add_reactions=True, embed_links=True,
+                                                                                   attach_files=True),
+        member: discord.PermissionOverwrite(read_messages=True, send_messages=True, add_reactions=True,
+                                            embed_links=True, attach_files=True)
     }
 
     ticketNumber = db.wallets.count_documents({})
 
     channel = await category.create_text_channel(name=f'ticket-{ticketNumber}', overwrites=overwrites)
     db.insert_wallet(channel.id, member.id, member, channel.name)
-    embed = discord.Embed(title="BlackBay | Cryptic Bank", description=f"Herzlichen Glückwunsch. Sie haben nun ihr Konto erstellt. {member.mention}")
+    embed = discord.Embed(title="BlackBay | Cryptic Bank",
+                          description=f"Herzlichen Glückwunsch. Sie haben nun ihr Konto erstellt. {member.mention}")
     await channel.send(embed=embed)
 
 
@@ -116,7 +126,7 @@ async def init_bank(ctx):
     embed2 = discord.Embed(title="BlackBay | Cryptic Bank",
                            description="Bankchannel gesetzt und in die Datenbank eingetragen. Diese Nachricht kann gelöscht werden.")
     # Sendet das Info-Embed
-    await ctx.send(embed=embed2)
+    await ctx.send(embed=embed2, delete_after=10)
     # Sendet das richtige Embed
     message = await ctx.send(embed=embed1)
     # Fügt den Brief hinzu
@@ -133,7 +143,7 @@ async def addrole(ctx, args):
         y = int(args)
         embed = discord.Embed(title="BlackBay | Cryptic Bank",
                               description=f"Rolle mit der ID {args} in die Datenbank hinzugefügt.")
-        db.insert_employee(args)
+        # db.insert_employee(args)
         await ctx.send(embed=embed)
 
     except:
@@ -149,24 +159,28 @@ async def addrole_error(error, ctx):
                               description="Dazu hast du keine Rechte. Anzeige ist raus!")
         await ctx.send(embed=embed)
 
+
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def close_wallet(ctx):
     embed = discord.Embed(title="BlackBay | Cryptic Bank", description="Ticket wird in 20 Sekunden gelöscht!")
     embed.set_footer(text="BlackBayBot")
+    channel: TextChannel = ctx.channel
     await ctx.send(embed=embed)
 
-    #await asyncio.sleep(20)
+    # await asyncio.sleep(20)
     db.close_status(ctx.channel.id)
-    #await ctx.channel.delete()
+    member_id = db.get_member_id_by_wallet_channel(channel.id)
+    member = await ctx.guild.fetch_member(member_id)
+    await channel.set_permissions(member, read_messages=True, send_messages=False, add_reactions=True,
+                                            embed_links=False, attach_files=False)
 
 
 @bot.command()
 async def pay_out(ctx):
-    embed = discord.Embed(title="BlackBay | Cryptic Bank", description="Ihr Geld wurden an 'b48bd270-e2a3-43a1-9ae9-a3dbb14257de' ausgezahlt")
+    embed = discord.Embed(title="BlackBay | Cryptic Bank",
+                          description="Ihr Geld wurden an 'b48bd270-e2a3-43a1-9ae9-a3dbb14257de' ausgezahlt")
     await ctx.send(embed=embed)
-
-
 
 
 bot.load_extension('cogs.help')
