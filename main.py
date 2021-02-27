@@ -157,8 +157,9 @@ async def close_wallet(ctx):
     embed.set_footer(text="BlackBayBot")
     await ctx.send(embed=embed)
 
-    await asyncio.sleep(20)
-    await ctx.channel.delete()
+    #await asyncio.sleep(20)
+    db.close_status(ctx.channel.id)
+    #await ctx.channel.delete()
 
 
 @bot.command()
