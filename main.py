@@ -150,6 +150,11 @@ async def addrole_error(error, ctx):
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def close_wallet(ctx):
+    embed = discord.Embed(title="BlackBay | Cryptic Bank", description="Ticket wird in 20 Sekunden gelöscht!")
+    embed.set_footer(text="BlackBayBot")
+    await ctx.send(embed=embed)
+
+    await asyncio.sleep(20)
     await ctx.channel.delete()
 
 

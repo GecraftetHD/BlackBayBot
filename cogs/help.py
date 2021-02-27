@@ -14,7 +14,7 @@ class help(commands.Cog):
                               colour=0x8080ff)
 
         embed.add_field(name="Fun <:thonkingbutcool:805521541562368080>", value="`get_money`")
-        embed.add_field(name="Adminstuff <:Staff:807266444126453800>", value="`stop_pls`")
+        embed.add_field(name="Adminstuff <:Staff:807266444126453800>", value="`stop_pls` `init_bank` `close_wallet` `add_role` `get_money`")
         embed.add_field(name="misc <:PepeHappy:805521541688197171> ", value="`Info`")
 
         await ctx.send(embed=embed)
@@ -30,6 +30,32 @@ class help(commands.Cog):
                               colour=0x8080ff)
         embed.add_field(name="**Syntax**", value="<stop_pls")
         await ctx.send(embed=embed)
+
+
+    @help.command()
+    async def init_bank(self, ctx):
+        embed = discord.Embed(title="BlackBay | Cryptic Bank",
+                              description="Legt den Bank Kanal fest. Hierfür werden spezialberechtigungen benötigt.",
+                              colour=0x8080ff)
+        embed.add_field(name="**Syntax**", value="<init_bank")
+        await ctx.send(embed=embed)
+
+    @help.command()
+    async def close_wallet(self, ctx):
+        embed = discord.Embed(title="BlackBay | Cryptic Bank",
+                              description="Schließt ein Wallet. Hierfür werden spezialberechtigungen benötigt.",
+                              colour=0x8080ff)
+        embed.add_field(name="**Syntax**", value="<close_wallet")
+        await ctx.send(embed=embed)
+
+    @help.command()
+    async def add_role(self, ctx):
+        embed = discord.Embed(title="BlackBay | Cryptic Bank",
+                              description="Legt die Mitarbeiter Rolle fest. Hierfür werden spezialberechtigungen benötigt.",
+                              colour=0x8080ff)
+        embed.add_field(name="**Syntax**", value="<addrole <id")
+        await ctx.send(embed=embed)
+
 
 
 def setup(bot):
