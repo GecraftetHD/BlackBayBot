@@ -47,7 +47,7 @@ def insert_wallet(channel_id, owner_id, member, channel_name):
     else:
         client = create_client(owner_id, member)
 
-    wallets.insert_one({"amount": 0.0, "users": [client], "channel_id": channel_id, "channel_name": channel_name})
+    wallets.insert_one({"amount": 0.0, "users": [client], "channel_id": channel_id, "channel_name": channel_name, "status": "active"})
 
 
 
