@@ -20,3 +20,4 @@ https://play.cryptic-game.net/signup
 | env_wallet_key | enter your wallet key
 | env_wallet_uuid | enter your wallet uuid
 | env_mod | id of the employee on the discord server
+| bot_owner_id | id of the bot owner

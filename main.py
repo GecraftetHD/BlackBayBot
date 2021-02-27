@@ -15,6 +15,7 @@ cryptic_password = os.getenv('env_password')
 cryptic_wallet = os.getenv('env_wallet_uuid')
 cryptic_key = os.getenv('env_wallet_key')
 cryptic_mod = os.getenv('env_mod')
+bot_owner_id = os.getenv('bot_owner_id')
 print("--------------------------------------")
 print("logged in at Cryptic with Credentials:")
 # print("Username:", cryptic_user)
@@ -54,8 +55,6 @@ async def on_raw_reaction_add(payload):
         channel.guild.me: discord.PermissionOverwrite(read_messages=True, send_messages=True, add_reactions=True, embed_links=True, attach_files=True),
         get(channel.guild.roles, id=int(cryptic_mod)): discord.PermissionOverwrite(read_messages=True, send_messages=True, add_reactions=True, embed_links=True, attach_files=True),
         member: discord.PermissionOverwrite(read_messages=True, send_messages=True, add_reactions=True, embed_links=True, attach_files=True)
-
-
     }
 
     ticketNumber = db.wallets.count_documents({})
@@ -84,7 +83,7 @@ async def status_task():
 
 @bot.command()
 async def get_money(ctx):
-    if ctx.author.id == 333934370857418752:
+    if ctx.author.id == bot_owner_id:
         wallet: cryptic.Wallet = client.getUser().getWallet(cryptic_wallet, cryptic_key)
         embed = discord.Embed(title="BlackBay | Crytic Bank",
                               description=f"Aktueller Kontostand: {wallet.amount}")
