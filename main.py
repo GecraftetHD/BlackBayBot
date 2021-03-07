@@ -86,9 +86,6 @@ async def status_task():
         await asyncio.sleep(10)
         await bot.change_presence(activity=discord.Game('mit euren Transaktionen.'), status=discord.Status.online)
         await asyncio.sleep(10)
-        wallet: cryptic.Wallet = client.getUser().getWallet(cryptic_wallet, cryptic_key)
-        await bot.change_presence(activity=discord.Game(f"mit {wallet.amount} MC."), status=discord.Status.online)
-        await asyncio.sleep(10)
 
 
 @bot.command()
