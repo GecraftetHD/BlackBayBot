@@ -161,20 +161,28 @@ async def addrole_error(error, ctx):
 @commands.has_permissions(administrator=True)
 async def close_wallet(ctx):
     embed = discord.Embed(title="BlackBay | Cryptic Bank", description="Ticket wird in 20 Sekunden geschlossen!")
-    embed.add_field(value="Gib `<stop` ein um dies abzubrechen!")
+    embed.add_field(name="Abbrechen:", value="Gib `stop` ein um dies abzubrechen!")
     embed.set_footer(text="BlackBayBot")
     channel: TextChannel = ctx.channel
     await ctx.send(embed=embed)
-    #await asyncio.sleep(1)
-    bot.wait_for(timeout=20)
+    try:
+        answ = await bot.wait_for("message", timeout=20)
+        if answ.content == "stop":
+            embed = discord.Embed(name="BlackBay | Cryptic Bank", description="Kontoschließung wurde abgebrochen...")
+            await ctx.send(embed=embed)
+        else:
+            return
 
-    db.close_status(ctx.channel.id)
-    member_id = db.get_member_id_by_wallet_channel(channel.id)
-    member = await ctx.guild.fetch_member(member_id)
-    await channel.set_permissions(member, read_messages=False, send_messages=False, add_reactions=True,
+    except asyncio.TimeoutError:
+        print("Timeout")
+
+        db.close_status(ctx.channel.id)
+        member_id = db.get_member_id_by_wallet_channel(channel.id)
+        member = await ctx.guild.fetch_member(member_id)
+        await channel.set_permissions(member, read_messages=False, send_messages=False, add_reactions=True,
                                             embed_links=False, attach_files=False)
-    embed = discord.Embed(title="BlackBay | Cryptic Bank", description="Ticketstatus wurde auf `closed` gesetzt.")
-    await ctx.send(embed=embed)
+        embed = discord.Embed(title="BlackBay | Cryptic Bank", description="Ticketstatus wurde auf `closed` gesetzt.")
+        await ctx.send(embed=embed)
 
 
 @bot.command()
