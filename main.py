@@ -86,9 +86,6 @@ async def status_task():
         await asyncio.sleep(10)
         await bot.change_presence(activity=discord.Game('mit euren Transaktionen.'), status=discord.Status.online)
         await asyncio.sleep(10)
-        wallet: cryptic.Wallet = client.getUser().getWallet(cryptic_wallet, cryptic_key)
-        await bot.change_presence(activity=discord.Game(f"mit {wallet.amount} MC."), status=discord.Status.online)
-        await asyncio.sleep(10)
 
 
 @bot.command()
@@ -163,17 +160,21 @@ async def addrole_error(error, ctx):
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def close_wallet(ctx):
-    embed = discord.Embed(title="BlackBay | Cryptic Bank", description="Ticket wird in 20 Sekunden gelöscht!")
+    embed = discord.Embed(title="BlackBay | Cryptic Bank", description="Ticket wird in 20 Sekunden geschlossen!")
+    embed.add_field(value="Gib `<stop` ein um dies abzubrechen!")
     embed.set_footer(text="BlackBayBot")
     channel: TextChannel = ctx.channel
     await ctx.send(embed=embed)
+    #await asyncio.sleep(1)
+    bot.wait_for(timeout=20)
 
-    # await asyncio.sleep(20)
     db.close_status(ctx.channel.id)
     member_id = db.get_member_id_by_wallet_channel(channel.id)
     member = await ctx.guild.fetch_member(member_id)
-    await channel.set_permissions(member, read_messages=True, send_messages=False, add_reactions=True,
+    await channel.set_permissions(member, read_messages=False, send_messages=False, add_reactions=True,
                                             embed_links=False, attach_files=False)
+    embed = discord.Embed(title="BlackBay | Cryptic Bank", description="Ticketstatus wurde auf `closed` gesetzt.")
+    await ctx.send(embed=embed)
 
 
 @bot.command()
