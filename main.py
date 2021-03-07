@@ -166,8 +166,8 @@ async def close_wallet(ctx):
     channel: TextChannel = ctx.channel
     await ctx.send(embed=embed)
     try:
-        ans = await bot.wait_for("message", timeout=20)
-        if ans.content == "stop":
+        answ = await bot.wait_for("message", timeout=20)
+        if answ.content == "stop":
             embed = discord.Embed(name="BlackBay | Cryptic Bank", description="Kontoschließung wurde abgebrochen...")
             await ctx.send(embed=embed)
         else:
