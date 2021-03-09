@@ -230,6 +230,11 @@ async def withdraw(ctx):
     await ctx.send(embed=embed)
 
 
+
+@bot.command()
+async def blabla(ctx):
+    reqs.get_all_money(cryptic_wallet, cryptic_key)
+
 bot.load_extension('cogs.help')
 bot.load_extension('cogs.bank')
 bot.run(TOKEN)

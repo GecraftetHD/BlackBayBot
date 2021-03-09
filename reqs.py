@@ -14,3 +14,8 @@ def login():
 
 def logout():
     cryptic.client.logout()
+
+def  get_all_money(uuid, key):
+    login()
+    wallet: cryptic.Wallet = cryptic.client.getUser().getWallet(uuid, key)
+    return wallet.amount
