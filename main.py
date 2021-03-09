@@ -9,6 +9,9 @@ from discord.ext.commands import CheckFailure
 from discord.utils import get
 from discord import Member, TextChannel
 import config
+import random
+import string
+
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -29,6 +32,14 @@ bot.remove_command('help')
 def login():
     client = cryptic.Client('wss://ws.cryptic-game.net')
     client.login(cryptic_user, cryptic_password)
+
+
+def get_random_string(length):
+    letters = string.ascii_lowercase
+    result_str = ''.join(random.choice(letters) for i in range(length))
+    #print("Random string of length", length, "is:", result_str)
+    return result_str
+
 
 
 @bot.event
@@ -196,11 +207,14 @@ async def pay_out(ctx):
 async def deposit(ctx):
     code = "ch1cka1l9yv0wa"
     channel_id = ctx.channel.id
-
+    db.is_wallet(channel_id)
+    if not True:
+        return
     embed = discord.Embed(title="BlackBay | Cryptic Bank",
                           description="Um einzahlen zu können, sende dein Geld bitte an untenstehende "
                                       "Zieladresse. Bitte nutze als Usage den unten angegeben Code, damit wir dir das Geld zuordnen können. Dieser Code wird jedes mal neugeneriert und verfällt nach einer Minute.")
     embed.add_field(name="Ziel-UUD", value="`8c9718e5-eceb-4d0d-a8dd-971e520e80b9 af8d6ce6c3`")
+    code = get_random_string(10)
     embed.add_field(name="Code:", value=f"`{code}`")
     await ctx.send(embed=embed)
 

@@ -50,8 +50,13 @@ def get_client(user_id):
     client = clients.find_one({"user_id": user_id})
     return ObjectId(client["_id"])
 
+
 def is_wallet(channel_id):
     wallets = db["wallets"]
+    wallet = wallets.find_one({"chanel_id": channel_id})
+    print(wallet)
+    if len(wallet) > 0:
+        print("True")
 
 
 
