@@ -195,6 +195,8 @@ async def pay_out(ctx):
 @bot.command()
 async def deposit(ctx):
     code = "ch1cka1l9yv0wa"
+    channel_id = ctx.channel.id
+
     embed = discord.Embed(title="BlackBay | Cryptic Bank",
                           description="Um einzahlen zu können, sende dein Geld bitte an untenstehende "
                                       "Zieladresse. Bitte nutze als Usage den unten angegeben Code, damit wir dir das Geld zuordnen können. Dieser Code wird jedes mal neugeneriert und verfällt nach einer Minute.")

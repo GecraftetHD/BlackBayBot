@@ -50,6 +50,10 @@ def get_client(user_id):
     client = clients.find_one({"user_id": user_id})
     return ObjectId(client["_id"])
 
+def is_wallet(channel_id):
+    wallets = db["wallets"]
+
+
 
 def close_status(channel_id):
     wallet = wallets.update_one({"channel_id": channel_id}, {"$set": {"status": "closed"}})
