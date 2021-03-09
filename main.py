@@ -26,9 +26,9 @@ print("--------------------------------------")
 
 bot = commands.Bot(command_prefix='<', intents=discord.Intents.all())
 bot.remove_command('help')
-
-client = cryptic.Client('wss://ws.cryptic-game.net')
-client.login(cryptic_user, cryptic_password)
+def login():
+    client = cryptic.Client('wss://ws.cryptic-game.net')
+    client.login(cryptic_user, cryptic_password)
 
 
 @bot.event
@@ -192,7 +192,23 @@ async def pay_out(ctx):
     await ctx.send(embed=embed)
 
 
+@bot.command()
+async def deposit(ctx):
+    code = "ch1cka1l9yv0wa"
+    embed = discord.Embed(title="BlackBay | Cryptic Bank",
+                          description="Um einzahlen zu können, sende dein Geld bitte an untenstehende "
+                                      "Zieladresse. Bitte nutze als Usage den unten angegeben Code, damit wir dir das Geld zuordnen können. Dieser Code wird jedes mal neugeneriert und verfällt nach einer Minute.")
+    embed.add_field(name="Ziel-UUD", value="`8c9718e5-eceb-4d0d-a8dd-971e520e80b9 af8d6ce6c3`")
+    embed.add_field(name="Code:", value=f"`{code}`")
+    await ctx.send(embed=embed)
+
+@bot.command()
+async def withdraw(ctx):
+    embed = discord.Embed(title="BlackBay | Cryptic Bank", description="Basic withdraw Embed")
+    await ctx.send(embed=embed)
+
+
 bot.load_extension('cogs.help')
 bot.load_extension('cogs.bank')
 bot.run(TOKEN)
-client.logout()
+#client.logout()
