@@ -11,6 +11,9 @@ from discord import Member, TextChannel
 import config
 import random
 import string
+import reqs as reqs
+
+
 
 
 load_dotenv()
@@ -29,6 +32,8 @@ print("--------------------------------------")
 
 bot = commands.Bot(command_prefix='<', intents=discord.Intents.all())
 bot.remove_command('help')
+
+
 def login():
     client = cryptic.Client('wss://ws.cryptic-game.net')
     client.login(cryptic_user, cryptic_password)
@@ -37,9 +42,8 @@ def login():
 def get_random_string(length):
     letters = string.ascii_lowercase
     result_str = ''.join(random.choice(letters) for i in range(length))
-    #print("Random string of length", length, "is:", result_str)
+    # print("Random string of length", length, "is:", result_str)
     return result_str
-
 
 
 @bot.event
@@ -191,7 +195,7 @@ async def close_wallet(ctx):
         member_id = db.get_member_id_by_wallet_channel(channel.id)
         member = await ctx.guild.fetch_member(member_id)
         await channel.set_permissions(member, read_messages=False, send_messages=False, add_reactions=True,
-                                            embed_links=False, attach_files=False)
+                                      embed_links=False, attach_files=False)
         embed = discord.Embed(title="BlackBay | Cryptic Bank", description="Ticketstatus wurde auf `closed` gesetzt.")
         await ctx.send(embed=embed)
 
@@ -205,10 +209,11 @@ async def pay_out(ctx):
 
 @bot.command()
 async def deposit(ctx):
-    code = "ch1cka1l9yv0wa"
     channel_id = ctx.channel.id
-    db.is_wallet(channel_id)
-    if not True:
+    out = db.is_wallet(channel_id)
+
+    if not out == True:
+        print("not true")
         return
     embed = discord.Embed(title="BlackBay | Cryptic Bank",
                           description="Um einzahlen zu können, sende dein Geld bitte an untenstehende "
@@ -217,6 +222,7 @@ async def deposit(ctx):
     code = get_random_string(10)
     embed.add_field(name="Code:", value=f"`{code}`")
     await ctx.send(embed=embed)
+
 
 @bot.command()
 async def withdraw(ctx):
@@ -227,4 +233,4 @@ async def withdraw(ctx):
 bot.load_extension('cogs.help')
 bot.load_extension('cogs.bank')
 bot.run(TOKEN)
-#client.logout()
+# client.logout()
