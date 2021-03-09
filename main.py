@@ -11,10 +11,8 @@ from discord import Member, TextChannel
 import config
 import random
 import string
-import reqs as reqs
-
-
-
+import reqs
+import sys
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -32,11 +30,8 @@ print("--------------------------------------")
 
 bot = commands.Bot(command_prefix='<', intents=discord.Intents.all())
 bot.remove_command('help')
-
-
-def login():
-    client = cryptic.Client('wss://ws.cryptic-game.net')
-    client.login(cryptic_user, cryptic_password)
+cryptic_client = reqs.CrypticClient()
+cryptic_client.login(cryptic_user, cryptic_password)
 
 
 def get_random_string(length):
@@ -210,14 +205,14 @@ async def pay_out(ctx):
 @bot.command()
 async def deposit(ctx):
     channel_id = ctx.channel.id
-    out = db.is_wallet(channel_id)
 
-    if not out == True:
-        print("not true")
+    if not db.is_wallet(channel_id):
         return
     embed = discord.Embed(title="BlackBay | Cryptic Bank",
                           description="Um einzahlen zu können, sende dein Geld bitte an untenstehende "
-                                      "Zieladresse. Bitte nutze als Usage den unten angegeben Code, damit wir dir das Geld zuordnen können. Dieser Code wird jedes mal neugeneriert und verfällt nach einer Minute.")
+                                      "Zieladresse. Bitte nutze als Usage den unten angegeben Code, damit wir dir das "
+                                      "Geld zuordnen können. Dieser Code wird jedes mal neugeneriert und verfällt "
+                                      "nach einer Minute.")
     embed.add_field(name="Ziel-UUD", value="`8c9718e5-eceb-4d0d-a8dd-971e520e80b9 af8d6ce6c3`")
     code = get_random_string(10)
     embed.add_field(name="Code:", value=f"`{code}`")
@@ -230,12 +225,16 @@ async def withdraw(ctx):
     await ctx.send(embed=embed)
 
 
-
 @bot.command()
-async def blabla(ctx):
-    reqs.get_all_money(cryptic_wallet, cryptic_key)
+@commands.has_permissions(administrator=True)
+async def shutdown(ctx):
+    cryptic_client.close()
+    await bot.logout()
+    loop = asyncio.get_event_loop()
+    loop.stop()
+    sys.exit(0)
+
 
 bot.load_extension('cogs.help')
 bot.load_extension('cogs.bank')
 bot.run(TOKEN)
-# client.logout()

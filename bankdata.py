@@ -52,12 +52,7 @@ def get_client(user_id):
 
 
 def is_wallet(channel_id):
-    wallets = db["wallets"]
-    wallet = wallets.find_one({"chanel_id": channel_id})
-    print(wallet)
-    if len(wallet) > 0:
-        print("True")
-
+    return wallets.count_documents({"chanel_id": channel_id}) > 0
 
 
 def close_status(channel_id):
